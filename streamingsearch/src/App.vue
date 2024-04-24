@@ -19,4 +19,9 @@ import HomeView from './views/HomeView.vue';
 .body, .headercontainer, .viewcontainer {
   width: 100%; 
 }
+
+.viewcontainer{
+padding: 2em;
+}
+
 </style>
