@@ -1,9 +1,10 @@
 <template>
     <div class="card">
-      <img :src="info.image" alt="Poster" class="card-img-top">
       <div class="card-body">
-        <h5 class="card-title">{{ info.title }}</h5>
-        <p class="card-text">{{ info.description }}</p>
+        <h5 class="card-title">{{ info.title }} ({{ info.type }})</h5>
+        <p class="card-text">Year: {{ info.year }}</p>
+        <p class="card-text">Genres: {{ info.genres }}</p>
+        <p class="card-status">Status: {{ info.status }}</p>
       </div>
     </div>
   </template>
@@ -21,12 +22,7 @@
   
   <style scoped>
   .card {
-    width: 18rem;
-    margin: 1rem;
-  }
-  .card-img-top {
-    width: 100%;
-    height: auto;
+    margin-bottom: 20px;
   }
   </style>
   

@@ -15,19 +15,25 @@
       <button type="submit">Search</button>
     </form>
 
+  
     <!-- Displaying the response data -->
-    <div v-if="response">
+    <div v-if="response && response.length">
       <h3>Results:</h3>
-      <pre>{{ response }}</pre>
+      <DataCard v-for="item in response" :key="item.title" :info="item" />
     </div>
+    <div v-else>No results found.</div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import DataCard from '@/components/DataCard.vue';
 
 
 export default {
+  components: {
+    DataCard
+  },
   data() {
     return {
       form: {
@@ -50,8 +56,18 @@ export default {
         }
       };
       try {
-        const result = await axios.request(options);
-        this.response = result.data;
+    const result = await axios.request(options);
+    if (result.data && result.data.result) {
+      this.response = result.data.result.map(item => ({
+        title: item.title,
+        type: item.type,
+        year: item.type === 'series' ? item.firstAirYear : item.year,
+        genres: item.genres.map(genre => genre.name).join(', '),
+        status: item.status ? item.status.statusText : 'N/A'
+      }));
+    } else {
+      this.response = [];
+    }
       } catch (error) {
         console.error('Error fetching data:', error);
         if (error.response) {
