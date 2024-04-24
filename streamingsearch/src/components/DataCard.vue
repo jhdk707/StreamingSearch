@@ -1,28 +1,68 @@
+<!-- DataCard.vue -->
+
 <template>
     <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">{{ info.title }} ({{ info.type }})</h5>
-        <p class="card-text">Year: {{ info.year }}</p>
-        <p class="card-text">Genres: {{ info.genres }}</p>
-        <p class="card-status">Status: {{ info.status }}</p>
-      </div>
+      <fwb-card
+        :img-src="info.image"
+        img-alt="Show image"
+        variant="image"
+        class="mb-4"
+      >
+        <div class="p-5">
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            {{ info.title }}
+          </h5>
+          <p class="font-normal text-gray-700 dark:text-gray-400">
+            {{ info.description }}
+          </p>
+          <p class="font-normal text-gray-700 dark:text-gray-400">
+            Genres: {{ info.genres }}
+          </p>
+          <div v-if="info.streamingInfo.length">
+            <h6 class="mt-4 mb-1 text-gray-900 dark:text-white">Available on:</h6>
+            <ul>
+              <li v-for="stream in info.streamingInfo" :key="stream.link" class="text-gray-700 dark:text-gray-400">
+                {{ stream.service || 'Unknown Service' }} ({{ stream.streamingType || 'Unknown Type' }}) - 
+                <a :href="stream.link" target="_blank">Watch Now</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </fwb-card>
     </div>
   </template>
   
-  <script>
-  export default {
-    props: {
-      info: {
-        type: Object,
-        required: true
-      }
-    }
-  }
+  <script setup>
+  import { FwbCard } from 'flowbite-vue'
   </script>
   
-  <style scoped>
-  .card {
-    margin-bottom: 20px;
+  <script>
+export default {
+    mounted() {
+    console.log(this.info); // Log to see the data each card receives
+  },
+  props: {
+    info: {
+      type: Object,
+      required: true
+    }
+  },
+  filters: {
+    capitalize(value) {
+      if (!value) return '';
+      value = value.toString();
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
   }
+}
+</script>
+  
+  <style scoped>
+.card {
+ flex: 0 1 calc(50% - 20px); /* Two cards per row on smaller screens */
+  margin: 15px;
+  max-width: 300px;  /* Ensures that the card does not grow beyond 300px */
+  
+}
   </style>
   

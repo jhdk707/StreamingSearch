@@ -1,7 +1,9 @@
+<!-- HomeView.vue -->
+
 <template>
   <div>
     <form @submit.prevent="fetchData">
-      <input v-model="form.title" placeholder="Enter a show or movie title">
+      <fwb-input v-model="form.title" label="Small" placeholder="Enter a show or movie title"/>
       <select v-model="form.country">
         <option value="us">USA</option>
         <option value="uk">UK</option>
@@ -12,18 +14,29 @@
         <option value="movie">Movie</option>
         <option value="show">TV Show</option>
       </select>
-      <button type="submit">Search</button>
+      <fwb-button gradient="green-blue" outline type="submit" size="lg">Search</fwb-button>
     </form>
 
   
     <!-- Displaying the response data -->
+    <div class="grid-container">
     <div v-if="response && response.length">
-      <h3>Results:</h3>
-      <DataCard v-for="item in response" :key="item.title" :info="item" />
+      <DataCard
+        v-for="item in response"
+        :key="item.title"
+        :info="item"
+      />
     </div>
-    <div v-else>No results found.</div>
+    <div v-else>
+      No results found.
+    </div>
+  </div>
   </div>
 </template>
+
+<script setup>
+import { FwbInput, FwbButton } from 'flowbite-vue'
+</script>
 
 <script>
 import axios from 'axios';
@@ -60,10 +73,15 @@ export default {
     if (result.data && result.data.result) {
       this.response = result.data.result.map(item => ({
         title: item.title,
-        type: item.type,
-        year: item.type === 'series' ? item.firstAirYear : item.year,
+        image: item.poster_path || 'default_image_url_here',
+        description: `Type: ${item.type}, Year: ${item.year || item.firstAirYear}, Status: ${item.status ? item.status.statusText : 'N/A'}`,
         genres: item.genres.map(genre => genre.name).join(', '),
-        status: item.status ? item.status.statusText : 'N/A'
+        streamingInfo: item.streamingInfo.us ? item.streamingInfo.us.map(service => ({
+          service: service.service,
+          streamingType: service.streamingType,
+          quality: service.quality,
+          link: service.link
+        })) : []
       }));
     } else {
       this.response = [];
@@ -85,4 +103,24 @@ export default {
 input, select {
   color: black;
 }
+
+select{
+border-radius: 5px;
+}
+
+.grid-container {
+  margin-top: 2%;
+  color: white;
+  max-height: 800px;
+  max-width: 100vw;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.card {
+  flex: 0 1 calc(50% - 20px); /* Two cards per row on smaller screens */
+ margin: 15px;
+}
 </style>
+
