@@ -26,6 +26,7 @@
 <script>
 import axios from 'axios';
 
+
 export default {
   data() {
     return {
@@ -44,16 +45,19 @@ export default {
         url: 'https://streaming-availability.p.rapidapi.com/search/title',
         params: this.form,
         headers: {
-          'X-RapidAPI-Key': 'YOUR_RAPIDAPI_KEY',
+          'X-RapidAPI-Key': '16f87e2059mshe937410fce7f782p1d1cc9jsnae5dd54150f4',  
           'X-RapidAPI-Host': 'streaming-availability.p.rapidapi.com'
         }
       };
-
       try {
         const result = await axios.request(options);
         this.response = result.data;
       } catch (error) {
         console.error('Error fetching data:', error);
+        if (error.response) {
+          console.error('Response status:', error.response.status);
+          console.error('Response data:', error.response.data);
+        }
         this.response = null;
       }
     }
@@ -62,9 +66,7 @@ export default {
 </script>
 
 <style>
-
-input, option, select{
-  color:black;
+input, select {
+  color: black;
 }
-
 </style>
